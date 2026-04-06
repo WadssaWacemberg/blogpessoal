@@ -25,9 +25,7 @@ export class PostagemController {
 
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
-  // 2. Definido o retorno como Promise<Postagem>
   findById(@Param('id', ParseIntPipe) id: number): Promise<Postagem> {
-    // 3. Chamada correta do método do Service passando o ID
     return this.postagemService.findById(id);
   }
 
