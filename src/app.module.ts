@@ -17,7 +17,7 @@ import { Usuario } from './usuario/entities/usuario.entity';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '1026',
+      password: process.env.DB_PASSWORD,
       database: 'db_blogpessoal',
       entities: [Postagem, Tema, Usuario],
       synchronize: true,
