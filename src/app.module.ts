@@ -6,6 +6,9 @@ import { Tema } from './tema/entity/tema.entity';
 import { TemaModule } from './tema/module/tema.module';
 import { TemaService } from './tema/services/tema.service';
 import { TemaController } from './tema/controller/tema.controllers';
+import { AuthModule } from './auth/module/auth.module';
+import { UsuarioModule } from './usuario/module/usuario.module';
+import { Usuario } from './usuario/entities/usuario.entity';
 
 @Module({
   imports: [
@@ -16,11 +19,13 @@ import { TemaController } from './tema/controller/tema.controllers';
       username: 'root',
       password: '1026',
       database: 'db_blogpessoal',
-      entities: [Postagem, Tema],
+      entities: [Postagem, Tema, Usuario],
       synchronize: true,
     }),
     PostagemModule,
     TemaModule,
+    AuthModule,
+    UsuarioModule,
   ],
   controllers: [],
   providers: [],
