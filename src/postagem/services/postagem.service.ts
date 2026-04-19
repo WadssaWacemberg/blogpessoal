@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository, DeleteResult } from 'typeorm';
-import { Postagem } from '../entity/postagem.entity';
+import { Postagem } from '../entities/postagem.entity';
 import { TemaService } from '../../tema/services/tema.service';
-import { UsuarioService } from 'src/usuario/services/usuario.service';
+import { UsuarioService } from '../../usuario/services/usuario.service';
 
 @Injectable()
 export class PostagemService {
@@ -13,6 +14,7 @@ export class PostagemService {
     private temaService: TemaService,
     private usuarioService: UsuarioService,
   ) {}
+
   async findAll(): Promise<Postagem[]> {
     return await this.postagemRepository.find({
       relations: {
@@ -52,11 +54,7 @@ export class PostagemService {
 
   async create(postagem: Postagem): Promise<Postagem> {
     if (postagem.tema != null) {
-      const tema = await this.temaService.findById(postagem.tema.id);
-
-      if (!tema)
-        throw new HttpException('Tema não encontrado!', HttpStatus.NOT_FOUND);
-
+      await this.temaService.findById(postagem.tema.id);
       return await this.postagemRepository.save(postagem);
     } else {
       throw new HttpException('Tema nao pode ser nulo!', HttpStatus.NOT_FOUND);
@@ -65,9 +63,9 @@ export class PostagemService {
 
   async delete(id: number): Promise<DeleteResult> {
     await this.findById(id);
-
     return await this.postagemRepository.delete(id);
   }
+
   async update(postagem: Postagem): Promise<Postagem> {
     const buscaPostagem: Postagem = await this.findById(postagem.id);
 
@@ -75,11 +73,7 @@ export class PostagemService {
       throw new HttpException('Postagem não encontrada!', HttpStatus.NOT_FOUND);
 
     if (postagem.tema) {
-      const tema = await this.temaService.findById(postagem.tema.id);
-
-      if (!tema)
-        throw new HttpException('Tema não encontrado!', HttpStatus.NOT_FOUND);
-
+      await this.temaService.findById(postagem.tema.id);
       return await this.postagemRepository.save(postagem);
     } else {
       throw new HttpException('Tema nao pode ser nulo!', HttpStatus.NOT_FOUND);

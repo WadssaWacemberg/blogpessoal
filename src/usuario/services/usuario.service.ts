@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Repository, DeleteResult, ILike } from 'typeorm';
 import { Usuario } from '../entities/usuario.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Bcrypt } from 'src/auth/bcrypt/bcrypt';
-
+import { Bcrypt } from '../../auth/bcrypt/bcrypt';
 @Injectable()
 export class UsuarioService {
   constructor(
