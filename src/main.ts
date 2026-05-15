@@ -23,7 +23,11 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  app.enableCors();
+  app.enableCors({
+    origin: '*', // Isso libera para qualquer domínio (incluindo o novo da Vercel)
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Accept, Authorization',
+  });
 
   await app.listen(process.env.PORT ?? 4000);
 }
