@@ -32,21 +32,32 @@ export class AuthService {
   }
 
   async login(usuarioLogin: UsuarioLogin) {
-    const payload = { sub: usuarioLogin.usuario };
-
+    // 1. Busca o usuário
     const buscaUsuario = await this.usuarioService.findByUsuario(
       usuarioLogin.usuario,
     );
-    if (!buscaUsuario) {
+
+    // 2. Se não existe OU a senha não bate, ERRO
+    if (
+      !buscaUsuario ||
+      !(await this.bcrypt.compararSenhas(
+        usuarioLogin.senha,
+        buscaUsuario.senha,
+      ))
+    ) {
       throw new HttpException(
-        'Erro na autenticação: Dados de usuário inconsistentes.',
+        'Usuário ou senha inválidos.',
         HttpStatus.UNAUTHORIZED,
       );
     }
+
+    // 3. Se passou, gera o payload e o token
+    const payload = { sub: buscaUsuario.usuario };
+
     return {
       id: buscaUsuario.id,
       nome: buscaUsuario.nome,
-      usuario: usuarioLogin.usuario,
+      usuario: buscaUsuario.usuario,
       senha: '',
       foto: buscaUsuario.foto,
       token: `Bearer ${this.jwtService.sign(payload)}`,
